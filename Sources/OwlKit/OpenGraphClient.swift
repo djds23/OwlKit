@@ -29,29 +29,30 @@ class OpenGraphClient {
         self.networking = networking
     }
 
-    func parse(url: URL) async throws -> [OGMetadata] {
+    func parse(url: URL) async throws -> [OGIdentifier: OGMetadata] {
         let (data, _) = try await networking.fetch(url)
-        guard let document = String(data: data, encoding: .utf8) else { return [] }
+        guard let document = String(data: data, encoding: .utf8) else { return [:] }
 
         let headMatch = document.firstMatch(of: OpenGraphClient.headRegex)
-        guard let head = headMatch?.output.0 else { return [] }
+        guard let head = headMatch?.output.0 else { return [:] }
 
         return parse(document: String(head))
     }
 
-    func parse(document: String) -> [OGMetadata] {
+    func parse(document: String) -> [OGIdentifier: OGMetadata] {
         let parser = Parser(document: document)
         parser.parse()
 
-        return parser.elements.compactMap { element -> OGMetadata? in
+        return Dictionary(uniqueKeysWithValues: parser.elements.compactMap { element -> (OGIdentifier, OGMetadata)? in
             guard
                 element.name == "meta",
                 let property = element.metadata["property"],
                 property.starts(with: "\"og:"),
                 let content = element.metadata["content"]
             else { return nil }
-            return .metadataFrom(property: property, content: content)
-        }
+            let metadata = OGMetadata.metadataFrom(property: property, content: content)
+            return (metadata.name, metadata)
+        })
     }
 }
 

@@ -24,10 +24,10 @@ final class OpenGraphClientTests: XCTestCase {
         let urlData: OGMetadata = try XCTUnwrap(.urlType(name: "og:url", rawValue: "https://www.imdb.com/title/tt0117500/"))
         let imageData: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock.jpg"))
         XCTAssertEqual(elements, [
-            .stringType(name: "og:title", rawValue: "The Rock"),
-            .stringType(name: "og:type", rawValue: "video.movie"),
-            urlData,
-            imageData
+            "og:title" : .stringType(name: "og:title", rawValue: "The Rock"),
+            "og:type" : .stringType(name: "og:type", rawValue: "video.movie"),
+            "og:url" : urlData,
+            "og:image" : imageData
         ])
     }
 }

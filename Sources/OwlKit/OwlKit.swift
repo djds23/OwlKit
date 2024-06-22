@@ -3,7 +3,7 @@
 import Foundation
 
 public struct OpenGraphService {
-    public var metadata: (URL) async throws -> [OGMetadata]
+    public var metadata: (URL) async throws -> [OGIdentifier: OGMetadata]
 
     public static func live() -> Self {
         let client = OpenGraphClient(networking: .live)
