@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  OGIdentifier+Identifiers.swift
+//
 //
 //  Created by Dean Silfen on 6/22/24.
 //
@@ -8,91 +8,91 @@
 import Foundation
 
 public extension OGIdentifier {
-    var Audio: OGIdentifier {
+    static var audio: OGIdentifier {
       "og:audio"
     }
 
-    var AudioSecureUrl: OGIdentifier {
+    static var audioSecureUrl: OGIdentifier {
       "og:audio:secure_url"
     }
 
-    var AudioType: OGIdentifier {
+    static var audioType: OGIdentifier {
       "og:audio:type"
     }
 
-    var Description: OGIdentifier {
+    static var description: OGIdentifier {
       "og:description"
     }
 
-    var Determiner: OGIdentifier {
+    static var determiner: OGIdentifier {
       "og:determiner"
     }
 
-    var Image: OGIdentifier {
+    static var image: OGIdentifier {
       "og:image"
     }
 
-    var ImageAlt: OGIdentifier {
+    static var imageAlt: OGIdentifier {
       "og:image:alt"
     }
 
-    var ImageHeight: OGIdentifier {
+    static var imageHeight: OGIdentifier {
       "og:image:height"
     }
 
-    var ImageSecureUrl: OGIdentifier {
+    static var imageSecureUrl: OGIdentifier {
       "og:image:secure_url"
     }
 
-    var ImageType: OGIdentifier {
+    static var imageType: OGIdentifier {
       "og:image:type"
     }
 
-    var ImageWidth: OGIdentifier {
+    static var imageWidth: OGIdentifier {
       "og:image:width"
     }
 
-    var Locale: OGIdentifier {
+    static var locale: OGIdentifier {
       "og:locale"
     }
 
-    var LocaleAlternate: OGIdentifier {
+    static var localeAlternate: OGIdentifier {
       "og:locale:alternate"
     }
 
-    var SiteName: OGIdentifier {
+    static var siteName: OGIdentifier {
       "og:site_name"
     }
 
-    var Title: OGIdentifier {
+    static var title: OGIdentifier {
       "og:title"
     }
 
-    var OGType: OGIdentifier {
+    static var oGType: OGIdentifier {
       "og:type"
     }
 
-    var Url: OGIdentifier {
+    static var url: OGIdentifier {
       "og:url"
     }
 
-    var Video: OGIdentifier {
+    static var video: OGIdentifier {
       "og:video"
     }
 
-    var VideoHeight: OGIdentifier {
+    static var videoHeight: OGIdentifier {
       "og:video:height"
     }
 
-    var VideoSecureURL: OGIdentifier {
+    static var videoSecureURL: OGIdentifier {
       "og:video:secure_url"
     }
 
-    var VideoType: OGIdentifier {
+    static var videoType: OGIdentifier {
       "og:video:type"
     }
 
-    var VideoWidth: OGIdentifier {
+    static var videoWidth: OGIdentifier {
       "og:video:width"
     }
 }

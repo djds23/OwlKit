@@ -87,8 +87,9 @@ public struct OGMetadata: Equatable {
     }
 
     static func urlType(name: OGIdentifier, rawValue: String) -> Self? {
+        let replacedString = rawValue.replacingOccurrences(of: "&amp;", with: "&") // Fix HTML encoding
         guard
-            let url = URL(string: rawValue)
+            let url = URL(string: replacedString)
         else { return nil }
 
         return .init(
