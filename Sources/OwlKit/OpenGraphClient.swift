@@ -8,6 +8,10 @@
 import RegexBuilder
 import Foundation
 
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
+
 class OpenGraphClient {
     struct Networking {
         var fetch: (URL) async throws -> (Data, URLResponse)
