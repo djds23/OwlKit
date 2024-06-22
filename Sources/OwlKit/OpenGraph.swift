@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum OGValue: Equatable {
+public enum OGValue: Equatable {
     case url(URL)
     case string(String)
     case integer(Int)
@@ -17,9 +17,14 @@ enum OGValue: Equatable {
     case bool(Bool)
 }
 
-struct OGMetadata: Equatable {
-    var name: String
-    var value: OGValue
+public struct OGMetadata: Equatable {
+    public var name: String
+    public var value: OGValue
+
+    public init(name: String, value: OGValue) {
+        self.name = name
+        self.value = value
+    }
 
     static func stringType(name: String, rawValue: String) -> Self {
         .init(

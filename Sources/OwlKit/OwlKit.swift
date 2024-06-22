@@ -2,10 +2,10 @@
 // https://docs.swift.org/swift-book
 import Foundation
 
-struct OpenGraphService {
-    var metadata: (URL) async throws -> [OGMetadata]
+public struct OpenGraphService {
+    public var metadata: (URL) async throws -> [OGMetadata]
 
-    static func live() -> Self {
+    public static func live() -> Self {
         let client = OpenGraphClient(networking: .live)
         return .init(metadata: { url in
             try await client.parse(url: url)
