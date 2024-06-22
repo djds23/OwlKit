@@ -13,8 +13,6 @@ jobs:
   build:
 
     runs-on: macos-latest
-      with:
-        xcode-version: '15.3'
 
     steps:
     - uses: actions/checkout@v4
