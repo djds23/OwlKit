@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "OpenGraphKit",
+    name: "OwlKit",
     platforms: [
         .iOS(.v16),
         .macOS(.v13)
@@ -12,16 +12,16 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "OpenGraphKit",
-            targets: ["OpenGraphKit"]),
+            name: "OwlKit",
+            targets: ["OwlKit"]),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "OpenGraphKit"),
+            name: "OwlKit"),
         .testTarget(
-            name: "OpenGraphKitTests",
-            dependencies: ["OpenGraphKit"]),
+            name: "OwlKitTests",
+            dependencies: ["OwlKit"]),
     ]
 )

@@ -1,7 +1,7 @@
 import XCTest
-@testable import OpenGraphKit
+@testable import OwlKit
 
-final class OpenGraphKitTests: XCTestCase {
+final class OwlKitTests: XCTestCase {
     func testExample() throws {
 //        let output = Parser().parse(document: testData)
 //        print(output)

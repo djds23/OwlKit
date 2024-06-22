@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import OpenGraphKit
+@testable import OwlKit
 
 final class ParserTests: XCTestCase {
     func testMetaTag() {
