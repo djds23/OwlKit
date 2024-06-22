@@ -30,7 +30,7 @@ class OpenGraphClient {
     }
 
     func parse(url: URL) async throws -> [OGMetadata] {
-        let (data, response) = try await networking.fetch(url)
+        let (data, _) = try await networking.fetch(url)
         guard let document = String(data: data, encoding: .utf8) else { return [] }
 
         let headMatch = document.firstMatch(of: OpenGraphClient.headRegex)

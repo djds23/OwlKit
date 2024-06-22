@@ -55,7 +55,6 @@ class Parser {
         }
     }
 
-
     func isAtEnd() -> Bool {
         current >= scanner.output.count
     }
@@ -64,7 +63,6 @@ class Parser {
         current += 1
         return currentChar()
     }
-
 
     func currentChar() -> Token {
         let index = scanner.output.index(scanner.output.startIndex, offsetBy: current - 1)
