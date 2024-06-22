@@ -12,7 +12,9 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+      with:
+        xcode-version: '15.3'
 
     steps:
     - uses: actions/checkout@v4
