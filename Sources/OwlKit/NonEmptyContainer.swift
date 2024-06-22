@@ -36,6 +36,4 @@ extension NonEmptyContainer: ExpressibleByArrayLiteral {
     }
 }
 
-extension NonEmptyContainer: Equatable where Element: Equatable {
-
-}
+extension NonEmptyContainer: Equatable where Element: Equatable { }
