@@ -7,28 +7,60 @@
 
 import Foundation
 
-struct OpenGraph {
-    var load: (URL) async -> [String]
+enum OGValue: Equatable {
+    case url(URL)
+    case string(String)
+    case integer(Int)
+    case float(Double)
+    case enumeration(Set<String>)
+    case datetime(Date)
+    case bool(Bool)
 }
 
-class OpenGraphClient {
-    init() {
+struct OGMetadata: Equatable {
+    var name: String
+    var value: OGValue
 
+    static func stringType(name: String, rawValue: String) -> Self {
+        .init(
+            name: name,
+            value: .string(rawValue)
+        )
     }
 
-    func parse(document: String) -> [Element] {
-        let parser = Parser(document: document)
-        parser.parse()
+    static func urlType(name: String, rawValue: String) -> Self? {
+        guard
+            let url = URL(string: rawValue)
+        else { return nil }
 
-        return parser.elements.compactMap { element in
-            print(element)
-            guard
-                element.name == "meta",
-                let property = element.metadata["property"],
-                (property?.starts(with: "\"og:") ?? false),
-                let _ = element.metadata["content"]
-            else { return nil }
-            return element
+        return .init(
+            name: name,
+            value: .url(url)
+        )
+    }
+
+    static func numericType(name: String, rawValue: String) -> Self? {
+        if rawValue.contains("(.|e|E)"), let doubleValue = Double(rawValue) {
+            return .init(name: name, value: .float(doubleValue))
+        } else if let intValue = Int(rawValue) {
+            return .init(name: name, value: .integer(intValue))
+        } else {
+            return nil
         }
+    }
+
+    static func metadataFrom(property: String, content: String) -> Self {
+        let trimmedProperty = property.withoutInnerStringQuotes
+        let trimmedContent = content.withoutInnerStringQuotes
+
+        let output: OGMetadata? = switch trimmedProperty {
+        case "og:url", "og:image":
+            .urlType(name: trimmedProperty, rawValue: trimmedContent)
+        case "og:image:height", "og:image:width":
+            .numericType(name: trimmedProperty, rawValue: trimmedContent)
+        default:
+            .stringType(name: trimmedProperty, rawValue: trimmedContent)
+        }
+        return output ?? .stringType(name: trimmedProperty, rawValue: trimmedContent)
     }
 }

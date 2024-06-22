@@ -117,9 +117,3 @@ class Scanner {
         addToken(.string)
     }
 }
-
-extension Character {
-    var isValidBodyCharacter: Bool {
-        isLetter || isNumber || self == "-"
-    }
-}

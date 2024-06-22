@@ -13,7 +13,7 @@ final class ParserTests: XCTestCase {
         let scanner = Parser(document: "<meta name=\"viewport\">")
         scanner.parse()
         print(scanner.elements, [
-            Element(
+            HTMLElement(
                 name: "meta",
                 metadata: [
                     "name" : "\"viewport\""

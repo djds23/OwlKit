@@ -8,11 +8,11 @@
 import Foundation
 import RegexBuilder
 
-struct Element: Equatable {
+struct HTMLElement: Equatable {
     var name: String
-    var metadata = [String: String?]()
+    var metadata = [String: String]()
 
-    internal init(name: String, metadata: [String : String?] = [String: String?]()) {
+    internal init(name: String, metadata: [String : String] = [String: String]()) {
         self.name = name
         self.metadata = metadata
     }
@@ -21,7 +21,7 @@ struct Element: Equatable {
 class Parser {
     let scanner: Scanner
     var current = 0
-    var elements = [Element]()
+    var elements = [HTMLElement]()
     init(document: String) {
         scanner = Scanner(document: document)
     }
@@ -30,12 +30,12 @@ class Parser {
         guard elements.isEmpty else { return }
         scanner.scan()
         
-        var currentElement: Element?
+        var currentElement: HTMLElement?
         while isAtEnd() == false {
             let t = advance()
             switch t.type {
             case .openingBracket:
-                currentElement = Element(name: peek().value)
+                currentElement = HTMLElement(name: peek().value)
             case .guts:
                 let next = peek()
                 if next.type == .equals {

@@ -10,14 +10,24 @@ import XCTest
 
 final class OpenGraphClientTests: XCTestCase {
 
-    func testExample() throws {
-        let client = OpenGraphClient()
-        let elements = client.parse(document: htmlText)
+    func testDocumentParsingExtractsProperlyTypedMedia() async throws {
+        let networking = OpenGraphClient.Networking { _ in
+            let output = try XCTUnwrap(htmlText.data(using: .utf8))
+            let response = URLResponse()
+            return (output, response)
+        }
+
+        let testURL = try XCTUnwrap(URL(string: "https://www.imdb.com/title/tt0117500/"))
+        let client = OpenGraphClient(networking: networking)
+        let elements = try await client.parse(url: testURL)
+
+        let urlData: OGMetadata = try XCTUnwrap(.urlType(name: "og:url", rawValue: "https://www.imdb.com/title/tt0117500/"))
+        let imageData: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock.jpg"))
         XCTAssertEqual(elements, [
-            .init(name: "meta", metadata: ["property": "\"og:title\"", "content": "\"The Rock\""]),
-            .init(name: "meta", metadata: ["property": "\"og:type\"", "content": "\"video.movie\""]),
-            .init(name: "meta", metadata: ["property": "\"og:url\"", "content": "\"https://www.imdb.com/title/tt0117500/\""]),
-            .init(name: "meta", metadata: ["property": "\"og:image\"", "content": "\"https://ia.media-imdb.com/images/rock.jpg\""])
+            .stringType(name: "og:title", rawValue: "The Rock"),
+            .stringType(name: "og:type", rawValue: "video.movie"),
+            urlData,
+            imageData
         ])
     }
 }
