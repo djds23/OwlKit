@@ -9,15 +9,15 @@ import XCTest
 @testable import OpenGraphKit
 
 final class ScannerTests: XCTestCase {
-    func testStringParser() {
-        let scanner = Scanner(head: "\"hello, world!\"")
+    func testStringScanner() {
+        let scanner = Scanner(document: "\"hello, world!\"")
         scanner.scan()
         XCTAssertEqual(scanner.output.count, 1)
         XCTAssertEqual(scanner.output, [.init(type: .string, value: "\"hello, world!\"")])
     }
 
-    func testBracketsParser() {
-        let scanner = Scanner(head: "<head></head>")
+    func testBracketsScanner() {
+        let scanner = Scanner(document: "<head></head>")
         scanner.scan()
         XCTAssertEqual(scanner.output.count, 6)
         XCTAssertEqual(scanner.output, [
@@ -31,7 +31,7 @@ final class ScannerTests: XCTestCase {
     }
 
     func testMetaTag() {
-        let scanner = Scanner(head: "<meta name=\"viewport\">")
+        let scanner = Scanner(document: "<meta name=\"viewport\">")
         scanner.scan()
         XCTAssertEqual(scanner.output.count, 6)
         XCTAssertEqual(scanner.output, [
@@ -45,7 +45,7 @@ final class ScannerTests: XCTestCase {
     }
 
     func testLinkTag() {
-        let scanner = Scanner(head: "<link rel=\"icon\" href=\"/icon.svg\" type=\"image/svg+xml\">")
+        let scanner = Scanner(document: "<link rel=\"icon\" href=\"/icon.svg\" type=\"image/svg+xml\">")
         scanner.scan()
         XCTAssertEqual(scanner.output.count, 12)
         XCTAssertEqual(scanner.output, [
@@ -65,7 +65,7 @@ final class ScannerTests: XCTestCase {
     }
 
     func testMetaWithHTMLEquivolent() {
-        let scanner = Scanner(head: "<meta http-equiv=\"content-type\">")
+        let scanner = Scanner(document: "<meta http-equiv=\"content-type\">")
         scanner.scan()
         XCTAssertEqual(scanner.output.count, 6)
         XCTAssertEqual(scanner.output, [
