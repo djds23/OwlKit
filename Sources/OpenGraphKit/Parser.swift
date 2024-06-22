@@ -17,7 +17,9 @@ class Parser {
         else { return [] }
         return parse(document: documentString)
     }
+
     func parse(document: String) -> [String] {
+        // We just want the head because that is where all the meta elements are. Should be able to easily swipe that with Regex
         let captureHead = Regex {
             One("<head>")
             Capture {
@@ -25,44 +27,35 @@ class Parser {
             }
             One("</head>")
         }
-//        let metaBody = Regex {
-//
-//        }
-//        let optionalPropertyPairing = Regex {
-//            Optionally {
-//                ZeroOrMore(.whitespace)
-//                One("=")
-//                ZeroOrMore(.whitespace)
-//                One("\"")
-//
-////                One("\"")
-//            }
-//        }
-//        let metaTags = Regex {
-//            One("<")
-//            ZeroOrMore(.whitespace)
-//            One("meta")
-//            Capture {
-//                OneOrMore {
-//                    ZeroOrMore(.whitespace)
-//                    OneOrMore(.word)
-//                    optionalPropertyPairing
-//                }
-//            }
-//            One(">")
-//        }
 
         guard let head = document.firstMatch(of: captureHead)?.output.0 else { return [] }
 
 
-        // Find all of the opening meta tags
-        // find all of the closing tags
-        // build all of the full sets
-        // parse the insides
+        // Take get all of the tags from the head
         let scanner = Scanner(head: String(head))
         scanner.scan()
-        return scanner.output
+        // Find all of the meta tags, meta tags are "void" so they are single elements and not pairs
+        // Find all the meta elements with a property & content, then build the elements
+        // See full spec https://html.spec.whatwg.org/multipage/semantics.html#the-meta-element
+        // build all of the full sets
+        // parse the insides
+        // https://stackoverflow.com/questions/6402528/opengraph-or-schema-org
+        return scanner.output.map { $0.value }
     }
+}
+
+enum TokenType: Equatable {
+    case string
+    case openingBracket
+    case closingBracket
+    case startClosingBracket
+    case equals
+    case guts
+}
+
+struct Token: Equatable {
+    var type: TokenType
+    var value: String
 }
 
 class Scanner {
@@ -71,7 +64,7 @@ class Scanner {
     var head: String
     var token: String?
 
-    var output = [String]()
+    var output = [Token]()
     init(head: String) {
         start = head.startIndex
         self.head = head
@@ -91,48 +84,52 @@ class Scanner {
         let c = advance()
         switch c {
         case "<":
-            // If we find a LT sign, we are at an opening tag
-            parseTag()
+            let nextUp = peek()
+            if nextUp == "/" {
+                advance()
+                addToken(.startClosingBracket)
+            } else {
+                // If we find a LT sign, we are at an opening tag
+                addToken(.openingBracket)
+            }
+        case ">":
+            addToken(.closingBracket)
+        case "\"":
+            parseString()
+        case "=":
+            addToken(.equals)
         default:
-            print("found char \(c)")
-            break
+            if c.isValidBodyCharacter {
+                parseBody()
+            } else {
+                print("unclear how to parse \(c)")
+            }
         }
     }
 
-    func parseTag() {
-//        parseName()
+    func parseBody() {
         var searchForClosingTag = true
         while isAtEnd() == false && searchForClosingTag{
-            let c = advance()
-            switch c {
-            case ">":
+            let c = peek()
+            if c.isValidBodyCharacter {
+                _ = advance()
+            } else {
                 searchForClosingTag = false
-            default:
-                break
             }
         }
-        addToken()
+        addToken(.guts)
     }
 
-    func addToken() {
-        let tag = head[start..<head.index(head.startIndex, offsetBy: current)]
-        print(tag)
-        output.append(String(tag))
-    }
-
-    func parseName() {
-        while isAtEnd() == false {
-            let c = advance()
-            if (c.isWhitespace || c.isLetter) == false {
-                break
-            }
-        }
+    func addToken(_ token: TokenType) {
+        let value = head[start..<head.index(head.startIndex, offsetBy: current)]
+        output.append(.init(type: token, value: String(value)))
     }
 
     func isAtEnd() -> Bool {
         current >= head.count
     }
 
+    @discardableResult
     func advance() -> Character {
         current += 1
         return currentChar()
@@ -141,5 +138,25 @@ class Scanner {
     func currentChar() -> Character {
         let index = head.index(head.startIndex, offsetBy: current - 1)
         return head[index]
+    }
+
+    func peek() -> Character {
+        let index = head.index(head.startIndex, offsetBy: current)
+        return head[index]
+    }
+
+    func parseString() {
+        while isAtEnd() == false && peek() != "\""  {
+            advance()
+        }
+        advance() // closing "
+
+        addToken(.string)
+    }
+}
+
+extension Character {
+    var isValidBodyCharacter: Bool {
+        isLetter || isNumber || self == "-"
     }
 }

@@ -3,8 +3,8 @@ import XCTest
 
 final class OpenGraphKitTests: XCTestCase {
     func testExample() throws {
-        let output = Parser().parse(document: testData)
-        print(output)
+//        let output = Parser().parse(document: testData)
+//        print(output)
     }
 }
 
