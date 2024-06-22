@@ -39,7 +39,10 @@ class Parser {
             case .guts:
                 let next = peek()
                 if next.type == .equals {
-                    currentElement?.metadata[t.value] = peek(by: 1).value
+                    let nextAfter = peek(by: 1)
+                    if nextAfter.type == .string {
+                        currentElement?.metadata[t.value] = nextAfter.value
+                    }
                 }
             case .closingBracket:
                 if let element = currentElement {
@@ -47,7 +50,6 @@ class Parser {
                     currentElement = nil
                 }
             case .startClosingBracket, .equals, .string:
-                print("Unusable media \(t)")
                 break
             }
         }

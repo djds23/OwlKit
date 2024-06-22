@@ -37,7 +37,6 @@ class Scanner {
     func scan() {
         while isAtEnd() == false {
             let newStart = document.index(document.startIndex, offsetBy: current)
-            print(current)
             start = newStart
             scanToken()
         }
@@ -64,8 +63,6 @@ class Scanner {
         default:
             if c.isValidBodyCharacter {
                 parseBody()
-            } else {
-                print("unclear how to parse \(c)")
             }
         }
     }
