@@ -22,6 +22,7 @@ let package = Package(
             name: "OwlKit"),
         .testTarget(
             name: "OwlKitTests",
-            dependencies: ["OwlKit"]),
+            dependencies: [.target(name: "OwlKit")]
+        ),
     ]
 )
