@@ -10,25 +10,23 @@ import Foundation
 import FoundationNetworking
 #endif
 
-extension OpenGraphClient {
-    struct Networking {
-        var fetch: (URL) async throws -> (Data, URLResponse)
+public struct Networking {
+    public var fetch: (URL) async throws -> (Data, URLResponse)
 
-        // If you are using this library with Vapor, or some other swift-nio based
-        // library on Linux, swap this implementation for one using AsyncHTTPClient.
-        static var `default`: Self {
-            .init { url in
-                #if canImport(FoundationNetworking)
-                    try await URLSession.shared.asyncData(from: url)
-                #else
-                    try await URLSession.shared.data(from: url)
-                #endif
-            }
+    // If you are using this library with Vapor, or some other swift-nio based
+    // library on Linux, swap this implementation for one using AsyncHTTPClient.
+    public static var `default`: Self {
+        .init { url in
+#if canImport(FoundationNetworking)
+            try await URLSession.shared.asyncData(from: url)
+#else
+            try await URLSession.shared.data(from: url)
+#endif
         }
+    }
 
-        internal init(fetch: @escaping (URL) async throws -> (Data, URLResponse)) {
-            self.fetch = fetch
-        }
+    public init(fetch: @escaping (URL) async throws -> (Data, URLResponse)) {
+        self.fetch = fetch
     }
 }
 // Credit to

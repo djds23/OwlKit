@@ -15,41 +15,20 @@ FROM swift:5.10 as base
 # the Awesome Compose repository: https://github.com/docker/awesome-compose
 FROM base as build
 ADD . /usr/local/owlkit
-RUN mkdir /usr/local/owlkit/ci/caches
-RUN chmod 775 /usr/local/owlkit/ci/caches
-
-RUN chmod +x /usr/local/owlkit/ci/build.sh
-RUN chmod +x /usr/local/owlkit/ci/test.sh
 
 WORKDIR /usr/local/owlkit
-
+RUN chmod +x /usr/local/owlkit/ci/build.sh
+RUN chmod +x /usr/local/owlkit/ci/test.sh
 RUN /usr/local/owlkit/ci/build.sh
-################################################################################
-# Create a final stage for running your application.
-#
-# The following commands copy the output from the "build" stage above and tell
-# the container runtime to execute it when the image is run. Ideally this stage
-# contains the minimal runtime dependencies for the application as to produce
-# the smallest image possible. This often means using a different and smaller
-# image than the one used for building the application, but for illustrative
-# purposes the "base" image is used here.
+
 FROM base AS final
 
-# Create a non-privileged user that the app will run under.
-# See https://docs.docker.com/go/dockerfile-user-best-practices/
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-USER appuser
+RUN groupadd -g 998 build-user && \
+    useradd -m -r -u 998 -g build-user build-user
 
 # Copy the executable from the "build" stage.
 COPY --from=build /usr/local/owlkit /usr/local/owlkit
+
 WORKDIR /usr/local/owlkit
 # What the container should run when it is started.
 ENTRYPOINT [ "./ci/test.sh" ]

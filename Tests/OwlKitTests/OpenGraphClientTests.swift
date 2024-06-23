@@ -14,7 +14,7 @@ import FoundationNetworking
 final class OpenGraphClientTests: XCTestCase {
 
     func testDocumentParsingExtractsProperlyTypedMedia() async throws {
-        let networking = OpenGraphClient.Networking { url in
+        let networking = Networking { url in
             let output = try XCTUnwrap(htmlText.data(using: .utf8))
             let response = URLResponse(url: url, mimeType: "text/html", expectedContentLength: 300, textEncodingName: nil)
             return (output, response)
@@ -35,7 +35,7 @@ final class OpenGraphClientTests: XCTestCase {
     }
 
     func testDocumentWithArrays() async throws {
-        let networking = OpenGraphClient.Networking { url in
+        let networking = Networking { url in
             let output = try XCTUnwrap(htmlWithArraysText.data(using: .utf8))
             let response = URLResponse(url: url, mimeType: "text/html", expectedContentLength: 300, textEncodingName: nil)
             return (output, response)
