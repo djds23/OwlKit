@@ -1,6 +1,9 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public struct OpenGraphService {
     public var metadata: (URL) async throws -> [OGIdentifier: NonEmptyContainer<OGMetadata>]

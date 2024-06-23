@@ -8,25 +8,7 @@
 import RegexBuilder
 import Foundation
 
-#if canImport(FoundationNetworking)
-    import FoundationNetworking
-#endif
-
 class OpenGraphClient {
-    struct Networking {
-        var fetch: (URL) async throws -> (Data, URLResponse)
-
-        static var live: Self {
-            .init { url in
-                try await URLSession.shared.data(from: url)
-            }
-        }
-
-        internal init(fetch: @escaping (URL) async throws -> (Data, URLResponse)) {
-            self.fetch = fetch
-        }
-    }
-
     var networking: Networking
 
     init(networking: Networking) {

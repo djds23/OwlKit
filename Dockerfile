@@ -14,13 +14,12 @@ FROM swift:5.10 as base
 # executable. For language-specific examples, take a look at the Dockerfiles in
 # the Awesome Compose repository: https://github.com/docker/awesome-compose
 FROM base as build
-ADD Sources /usr/local/owlkit/Sources
-ADD ci /usr/local/owlkit/ci
-ADD Package.swift /usr/local/owlkit
+ADD . /usr/local/owlkit
 RUN mkdir /usr/local/owlkit/ci/caches
 RUN chmod 775 /usr/local/owlkit/ci/caches
 
 RUN chmod +x /usr/local/owlkit/ci/build.sh
+RUN chmod +x /usr/local/owlkit/ci/test.sh
 
 WORKDIR /usr/local/owlkit
 
@@ -53,4 +52,4 @@ USER appuser
 COPY --from=build /usr/local/owlkit /usr/local/owlkit
 WORKDIR /usr/local/owlkit
 # What the container should run when it is started.
-ENTRYPOINT [ "./ci/build.sh" ]
+ENTRYPOINT [ "./ci/test.sh" ]
