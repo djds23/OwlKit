@@ -1,4 +1,4 @@
 #!/bin/bash
 
-swift build \
+swift build --target OwlKitTests \
 --cache-path ci/caches
