@@ -21,9 +21,9 @@ jobs:
     - name: Select Xcode 15.3
       run: sudo xcode-select -s /Applications/Xcode_15.3.app/Contents/Developer
     - name: Build
-      run: swift build -v
+      run: ./ci/build.sh
     - name: Run tests
-      run: swift test -v
+      run: ./ci/test.sh
   
   build-ubuntu:
     
@@ -31,11 +31,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: List Xcode installations
-      run: sudo ls -1 /Applications | grep "Xcode"
-    - name: Select Xcode 15.3
-      run: sudo xcode-select -s /Applications/Xcode_15.3.app/Contents/Developer
     - name: Build
-      run: swift build -v
+      run: ./ci/build.sh
     - name: Run tests
-      run: swift test -v
+      run: ./ci/test.sh
