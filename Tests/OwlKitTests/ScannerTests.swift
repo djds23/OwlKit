@@ -17,13 +17,14 @@ final class ScannerTests: XCTestCase {
     }
 
     func testBracketsScanner() {
-        let scanner = Scanner(document: "<head></head>")
+        let scanner = Scanner(document: "<head>Hello, world!</head>")
         scanner.scan()
-        XCTAssertEqual(scanner.output.count, 6)
+        XCTAssertEqual(scanner.output.count, 7)
         XCTAssertEqual(scanner.output, [
             .init(type: .openingBracket, value: "<"),
             .init(type: .guts, value: "head"),
             .init(type: .closingBracket, value: ">"),
+            .init(type: .contents, value: "Hello, world!"),
             .init(type: .startClosingBracket, value: "</"),
             .init(type: .guts, value: "head"),
             .init(type: .closingBracket, value: ">"),
@@ -77,6 +78,23 @@ final class ScannerTests: XCTestCase {
             .init(type: .closingBracket, value: ">"),
         ])
     }
+
+    func testElementWithNoContents() {
+        let scanner = Scanner(document: "<script src=\"js/app.js\"></script>")
+        scanner.scan()
+        XCTAssertEqual(scanner.output.count, 9)
+        XCTAssertEqual(scanner.output, [
+            .init(type: .openingBracket, value: "<"),
+            .init(type: .guts, value: "script"),
+            .init(type: .guts, value: "src"),
+            .init(type: .equals, value: "="),
+            .init(type: .string, value: "\"js/app.js\""),
+            .init(type: .closingBracket, value: ">"),
+            .init(type: .startClosingBracket, value: "</"),
+            .init(type: .guts, value: "script"),
+            .init(type: .closingBracket, value: ">"),
+        ])
+    }
 }
 
 let head = """
@@ -101,22 +119,3 @@ let head = """
   <meta name="theme-color" content="#fafafa">
 </head>
 """
-
-//            "<head>
-//            "<meta charset=\"utf-8\">",
-//            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
-//            "<title>",
-//            "</title>",
-//            "<link rel=\"stylesheet\" href=\"css/style.css\">",
-//            "<meta name=\"description\" content=\"\">",
-//            "<meta property =\"og:title\" content=\"Foo\">",
-//            "<meta property=\"og:type\" content=\"website\">",
-//            "<meta property=\"og:url\" content=\"fart.biz/whatup\">",
-//            "<meta property=\"og:image\" content=\"lol.png\">",
-//            "<meta property=\"og:image:alt\" content=\"dang\">",
-//            "<link rel=\"icon\" href=\"/favicon.ico\" sizes=\"any\">",
-//            "<link rel=\"icon\" href=\"/icon.svg\" type=\"image/svg+xml\">",
-//            "<link rel=\"apple-touch-icon\" href=\"icon.png\">",
-//            "<link rel=\"manifest\" href=\"site.webmanifest\">",
-//            "<meta name=\"theme-color\" content=\"#fafafa\">",
-//            "</head>"

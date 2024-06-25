@@ -8,16 +8,8 @@
 import Foundation
 import RegexBuilder
 
-struct HTMLElement: Equatable {
-    var name: String
-    var metadata = [String: String]()
-
-    internal init(name: String, metadata: [String : String] = [String: String]()) {
-        self.name = name
-        self.metadata = metadata
-    }
-}
-
+// Experimental HTML Parser
+// https://www.w3.org/TR/2011/WD-html-markup-20110113/syntax.html#:~:text=A%20void%20element%20is%20an,param%20%2C%20source%20%2C%20track%20%2C%20wbr
 class Parser {
     let scanner: Scanner
     var current = 0
@@ -45,11 +37,18 @@ class Parser {
                     }
                 }
             case .closingBracket:
+                if let element = currentElement, element.isVoidElement {
+                    elements.append(element)
+                    currentElement = nil
+                }
+            case .contents:
+                currentElement?.contents = t.value
+            case .startClosingBracket:
                 if let element = currentElement {
                     elements.append(element)
                     currentElement = nil
                 }
-            case .startClosingBracket, .equals, .string:
+            case .equals, .string:
                 break
             }
         }

@@ -14,6 +14,7 @@ enum TokenType: Equatable {
     case startClosingBracket
     case equals
     case guts
+    case contents
 }
 
 struct Token: Equatable {
@@ -26,7 +27,7 @@ class Scanner {
     var start: String.Index
     var document: String
     var token: String?
-
+    var isScanningContents = false
     var output = [Token]()
     init(document: String) {
         start = document.startIndex
@@ -46,6 +47,7 @@ class Scanner {
         let c = advance()
         switch c {
         case "<":
+            isScanningContents = false
             let nextUp = peek()
             if nextUp == "/" {
                 advance()
@@ -56,28 +58,41 @@ class Scanner {
             }
         case ">":
             addToken(.closingBracket)
+            isScanningContents = true
         case "\"":
             parseString()
         case "=":
             addToken(.equals)
         default:
-            if c.isValidBodyCharacter {
-                parseBody()
+            if isScanningContents {
+                parseContents()
+            } else if c.isValidBodyCharacter {
+                parseGuts()
             }
         }
     }
 
-    func parseBody() {
-        var searchForClosingTag = true
-        while isAtEnd() == false && searchForClosingTag{
+    func parseGuts() {
+        match { $0.isValidBodyCharacter }
+        addToken(.guts)
+    }
+
+    func parseContents() {
+        match { $0 != "<" }
+        isScanningContents = false
+        addToken(.contents)
+    }
+
+    func match(_ f: (Character) -> Bool) {
+        var hasFoundConditionalCharacter = true
+        while isAtEnd() == false && hasFoundConditionalCharacter {
             let c = peek()
-            if c.isValidBodyCharacter {
-                _ = advance()
+            if f(c) {
+                advance()
             } else {
-                searchForClosingTag = false
+                hasFoundConditionalCharacter = false
             }
         }
-        addToken(.guts)
     }
 
     func addToken(_ token: TokenType) {
