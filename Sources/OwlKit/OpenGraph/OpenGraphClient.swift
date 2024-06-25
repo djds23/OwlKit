@@ -19,7 +19,15 @@ class OpenGraphClient {
         let (data, _) = try await networking.fetch(url)
         guard let document = String(data: data, encoding: .utf8) else { return [:] }
 
-        let headMatch = document.firstMatch(of: OpenGraphClient.headRegex)
+        let headRegex = Regex {
+            One("<head>")
+            Capture {
+                OneOrMore(.any)
+            }
+            One("</head>")
+        }
+
+        let headMatch = document.firstMatch(of: headRegex)
         guard let head = headMatch?.output.0 else { return [:] }
 
         return parse(document: String(head))
@@ -42,15 +50,4 @@ class OpenGraphClient {
 
         return Dictionary(metadataWithIdentifiers, uniquingKeysWith: { lhs, rhs in lhs + rhs })
     }
-}
-
-extension OpenGraphClient {
-    static var headRegex = Regex {
-        One("<head>")
-        Capture {
-            OneOrMore(.any)
-        }
-        One("</head>")
-    }
-
 }

@@ -29,7 +29,10 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OwlKit"
+            name: "OwlKit",
+            swiftSettings: [
+              .enableExperimentalFeature("StrictConcurrency")
+            ]
         ),
         .testTarget(
             name: "OwlKitTests",
