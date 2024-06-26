@@ -40,9 +40,11 @@ class OpenGraphClient {
         let metadataWithIdentifiers = parser.elements.compactMap { element -> (OGIdentifier, NonEmptyContainer<OGMetadata>)? in
             guard
                 element.name == "meta",
-                let property = element.attributes["property"],
+                let propertyValue = element.attributes["property"],
+                let property = propertyValue.string,
                 property.starts(with: "\"og:"),
-                let content = element.attributes["content"]
+                let contentValue = element.attributes["content"],
+                let content = contentValue.string
             else { return nil }
             let metadata = OGMetadata.metadataFrom(property: property, content: content)
             return (metadata.name, [metadata])

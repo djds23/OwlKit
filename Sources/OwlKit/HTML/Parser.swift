@@ -33,8 +33,10 @@ class Parser {
                 if next.type == .equals {
                     let nextAfter = peek(by: 1)
                     if nextAfter.type == .string {
-                        currentElement?.attributes[t.value] = nextAfter.value
+                        currentElement?.attributes[t.value] = .string(nextAfter.value)
                     }
+                } else if currentElement?.name != t.value {
+                    currentElement?.attributes[t.value] = .empty
                 }
             case .closingBracket:
                 if let element = currentElement, element.isVoidElement {

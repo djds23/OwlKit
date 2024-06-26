@@ -46,4 +46,17 @@ final class ParserTests: XCTestCase {
             )
         ])
     }
+
+    func testInputTagWithEmptyAttribute() {
+        let parser = Parser(document: "<input disabled>")
+        parser.parse()
+        XCTAssertEqual(parser.elements, [
+            HTMLElement(
+                name: "input",
+                attributes: [
+                    "disabled" : .empty
+                ]
+            )
+        ])
+    }
 }
