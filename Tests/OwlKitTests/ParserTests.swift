@@ -15,7 +15,7 @@ final class ParserTests: XCTestCase {
         XCTAssertEqual(parser.elements, [
             HTMLElement(
                 name: "meta",
-                metadata: [
+                attributes: [
                     "name" : "\"viewport\""
                 ]
             )
@@ -28,7 +28,7 @@ final class ParserTests: XCTestCase {
         XCTAssertEqual(parser.elements, [
             HTMLElement(
                 name: "script",
-                metadata: [
+                attributes: [
                     "src" : "\"js/app.js\""
                 ]
             )
@@ -41,7 +41,7 @@ final class ParserTests: XCTestCase {
         XCTAssertEqual(parser.elements, [
             HTMLElement(
                 name: "p",
-                metadata: ["style": "\"color:green\""],
+                attributes: ["style": "\"color:green\""],
                 contents: "This is a paragraph."
             )
         ])

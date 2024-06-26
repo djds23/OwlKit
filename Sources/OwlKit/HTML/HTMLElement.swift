@@ -9,15 +9,15 @@ import Foundation
 
 struct HTMLElement: Equatable {
     var name: String
-    var metadata = [String: String]()
+    var attributes = [String: String]()
     var contents: String?
     internal init(
         name: String,
-        metadata: [String : String] = [String: String](),
+        attributes: [String : String] = [String: String](),
         contents: String? = nil
     ) {
         self.name = name
-        self.metadata = metadata
+        self.attributes = attributes
         self.contents = contents
     }
 }
