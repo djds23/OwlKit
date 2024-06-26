@@ -1,3 +1,3 @@
 #!/bin/bash
 
-swift run OwlKitCLI -- https://www.dessertperson.com/
+swift run OwlKitCLI -- https://developer.mozilla.org/en-US/
