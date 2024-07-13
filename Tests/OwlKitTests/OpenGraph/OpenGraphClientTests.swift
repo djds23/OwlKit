@@ -21,12 +21,14 @@ final class OpenGraphClientTests: XCTestCase {
         }
 
         let testURL = try XCTUnwrap(URL(string: "https://www.imdb.com/title/tt0117500/"))
-        let client = OpenGraphClient(networking: networking)
-        let elements = try await client.parse(url: testURL)
+        let hoot = HootClient(networking: networking)
+        let htmlElements = try await hoot.parse(url: testURL)
+        let ogData = OpenGraphClient(htmlElements: htmlElements).parse()
+
 
         let urlData: OGMetadata = try XCTUnwrap(.urlType(name: "og:url", rawValue: "https://www.imdb.com/title/tt0117500/"))
         let imageData: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock.jpg"))
-        XCTAssertEqual(elements, [
+        XCTAssertEqual(ogData, [
             "og:title" : [.stringType(name: "og:title", rawValue: "The Rock")],
             "og:type" : [.stringType(name: "og:type", rawValue: "video.movie")],
             "og:url" : [urlData],
@@ -42,13 +44,14 @@ final class OpenGraphClientTests: XCTestCase {
         }
 
         let testURL = try XCTUnwrap(URL(string: "https://www.imdb.com/title/tt0117500/"))
-        let client = OpenGraphClient(networking: networking)
-        let elements = try await client.parse(url: testURL)
+        let hoot = HootClient(networking: networking)
+        let htmlElements = try await hoot.parse(url: testURL)
+        let ogData = OpenGraphClient(htmlElements: htmlElements).parse()
         let imageData: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock.jpg"))
         let imageData1: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock-1.jpg"))
         let imageData2: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock-2.jpg"))
         let imageData3: OGMetadata = try XCTUnwrap(.urlType(name: "og:image", rawValue: "https://ia.media-imdb.com/images/rock-3.jpg"))
-        XCTAssertEqual(elements, [
+        XCTAssertEqual(ogData, [
             "og:image" : [imageData, imageData1, imageData2, imageData3]
         ])
     }

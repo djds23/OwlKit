@@ -9,35 +9,18 @@ import RegexBuilder
 import Foundation
 
 class OpenGraphClient {
-    var networking: Networking
-
-    init(networking: Networking) {
-        self.networking = networking
+    private var htmlElements: [HTMLElement]
+    private var output: [OGIdentifier: NonEmptyContainer<OGMetadata>]?
+    init(htmlElements: [HTMLElement]) {
+        self.htmlElements = htmlElements
     }
 
-    func parse(url: URL) async throws -> [OGIdentifier: NonEmptyContainer<OGMetadata>] {
-        let (data, _) = try await networking.fetch(url)
-        guard let document = String(data: data, encoding: .utf8) else { return [:] }
-
-        let headRegex = Regex {
-            One("<head>")
-            Capture {
-                OneOrMore(.any)
-            }
-            One("</head>")
+    func parse() -> [OGIdentifier: NonEmptyContainer<OGMetadata>] {
+        if let output {
+            return output
         }
 
-        let headMatch = document.firstMatch(of: headRegex)
-        guard let head = headMatch?.output.0 else { return [:] }
-
-        return parse(document: String(head))
-    }
-
-    func parse(document: String) -> [OGIdentifier: NonEmptyContainer<OGMetadata>] {
-        let parser = Parser(document: document)
-        parser.parse()
-
-        let metadataWithIdentifiers = parser.elements.compactMap { element -> (OGIdentifier, NonEmptyContainer<OGMetadata>)? in
+        let metadataWithIdentifiers = htmlElements.compactMap { element -> (OGIdentifier, NonEmptyContainer<OGMetadata>)? in
             guard
                 element.name == "meta",
                 let propertyValue = element.attributes["property"],
@@ -49,7 +32,8 @@ class OpenGraphClient {
             let metadata = OGMetadata.metadataFrom(property: property, content: content)
             return (metadata.name, [metadata])
         }
-
-        return Dictionary(metadataWithIdentifiers, uniquingKeysWith: { lhs, rhs in lhs + rhs })
+        let output = Dictionary(metadataWithIdentifiers, uniquingKeysWith: { lhs, rhs in lhs + rhs })
+        self.output = output
+        return output
     }
 }

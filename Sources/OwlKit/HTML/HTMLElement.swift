@@ -12,7 +12,11 @@ enum AttributeValue: Equatable, ExpressibleByStringLiteral {
         self = .string(value)
     }
 
+    /// Support for attributes which provide a string
     case string(String)
+
+    /// Support for attributes which only provide an identifier with no corseponding value.
+    /// For example `required` for `<input>`.
     case empty
 
     var string: String? {
