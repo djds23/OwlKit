@@ -12,13 +12,21 @@ public struct Summary {
     public var description: String?
     public var author: String?
     public var image: URL?
-
-    public init(title: String, url: URL, description: String? = nil, author: String? = nil, image: URL? = nil) {
+    public var imageAltText: String?
+    public init(
+        title: String,
+        url: URL,
+        description: String? = nil,
+        author: String? = nil,
+        image: URL? = nil,
+        imageAltText: String? = nil
+    ) {
         self.title = title
         self.url = url
         self.description = description
         self.author = author
         self.image = image
+        self.imageAltText = imageAltText
     }
 
     static func forURL(
@@ -32,7 +40,8 @@ public struct Summary {
             url: url,
             description: standard[.description]?.head.value ?? ogData[.description]?.head.value.string,
             author: standard[.author]?.head.value,
-            image: ogData[.image]?.head.value.url
+            image: ogData[.image]?.head.value.url,
+            imageAltText: ogData[.imageAlt]?.head.value.string
         )
     }
 }

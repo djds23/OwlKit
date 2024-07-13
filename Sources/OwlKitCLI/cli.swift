@@ -37,5 +37,6 @@ struct CLI {
         print(String(describing: summary.description))
         print(String(describing: summary.author))
         print(String(describing: summary.image))
+        print(String(describing: summary.imageAltText))
     }
 }

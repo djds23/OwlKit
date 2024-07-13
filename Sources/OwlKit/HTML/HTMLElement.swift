@@ -7,8 +7,8 @@
 
 import Foundation
 
-enum AttributeValue: Equatable, ExpressibleByStringLiteral {
-    init(stringLiteral value: StringLiteralType) {
+public enum AttributeValue: Equatable, ExpressibleByStringLiteral {
+    public init(stringLiteral value: StringLiteralType) {
         self = .string(value)
     }
 
@@ -19,7 +19,7 @@ enum AttributeValue: Equatable, ExpressibleByStringLiteral {
     /// For example `required` for `<input>`.
     case empty
 
-    var string: String? {
+    public var string: String? {
         switch self {
         case .string(let str): str
         case .empty: nil
@@ -27,11 +27,11 @@ enum AttributeValue: Equatable, ExpressibleByStringLiteral {
     }
 }
 
-struct HTMLElement: Equatable {
-    var name: String
-    var attributes = [String: AttributeValue]()
-    var contents: String?
-    internal init(
+public struct HTMLElement: Equatable {
+    public var name: String
+    public var attributes = [String: AttributeValue]()
+    public var contents: String?
+    public init(
         name: String,
         attributes: [String : AttributeValue] = [String: AttributeValue](),
         contents: String? = nil

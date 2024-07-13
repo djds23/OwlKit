@@ -24,7 +24,7 @@ class StandardMetadataClient {
                 let contents = element.contents {
                 return (
                     StandardIdentifier.title,
-                    [StandardMetadata(name: .title, value: contents)]
+                    [StandardMetadata(name: .title, value: contents.stringByDecodingHTMLEntities)]
                 )
             } else {
                 guard

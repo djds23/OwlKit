@@ -31,9 +31,9 @@ extension StandardMetadata {
     static func metadataFrom(name: String, content: String) -> Self? {
         switch name.withoutInnerStringQuotes {
         case "description":
-            return .init(name: .description, value: content.withoutInnerStringQuotes)
+            return .init(name: .description, value: content.withoutInnerStringQuotes.stringByDecodingHTMLEntities)
         case "author":
-            return .init(name: .author, value: content.withoutInnerStringQuotes)
+            return .init(name: .author, value: content.withoutInnerStringQuotes.stringByDecodingHTMLEntities)
         default:
             return nil
         }

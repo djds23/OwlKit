@@ -114,12 +114,12 @@ public struct OGMetadata: Equatable {
 
         let output: OGMetadata? = switch trimmedProperty {
         case "og:url", "og:image":
-            .urlType(name: trimmedProperty, rawValue: trimmedContent)
+            .urlType(name: trimmedProperty, rawValue: trimmedContent.stringByDecodingHTMLEntities)
         case "og:image:height", "og:image:width":
-            .numericType(name: trimmedProperty, rawValue: trimmedContent)
+            .numericType(name: trimmedProperty, rawValue: trimmedContent.stringByDecodingHTMLEntities)
         default:
-            .stringType(name: trimmedProperty, rawValue: trimmedContent)
+            .stringType(name: trimmedProperty, rawValue: trimmedContent.stringByDecodingHTMLEntities)
         }
-        return output ?? .stringType(name: trimmedProperty, rawValue: trimmedContent)
+        return output ?? .stringType(name: trimmedProperty, rawValue: trimmedContent.stringByDecodingHTMLEntities)
     }
 }
